@@ -258,10 +258,8 @@ MonoBehaviour:
   rotateBound: 60
   rotateValue: 0
   temp: 0
-  canMove: 0
   targetValue: 0
   timeThreshold: 2
-  stableTime: 0
 --- !u!136 &482180022
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -659,6 +657,7 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
+    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
