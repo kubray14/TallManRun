@@ -13,7 +13,7 @@ public class CameraMovement : MonoBehaviour
         offset = transform.position - player.position;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         Vector3 targetPosition = player.position + offset;
         targetPosition.y = transform.position.y; // Eðer yükseklik deðiþmemesini istiyorsanýz y eksenini sabit tutun

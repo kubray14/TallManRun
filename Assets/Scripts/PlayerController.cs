@@ -17,9 +17,13 @@ public class PlayerController : MonoBehaviour
     public float timeThreshold = 2f; // Minimum ayný deðerde kalma süresi
     private float stableTime = 0f;
 
+    private void Start()
+    {
+      //  rb = GetComponent<Rigidbody>(); 
+    }
     private void FixedUpdate()
     {
-        Movement();
+      Movement();
     }
     private void Movement()
     {
