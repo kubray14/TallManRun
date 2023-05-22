@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    public float force;
     [SerializeField] private float forwardSpeed = 1f;
     [SerializeField] private float rotateSensitivity = 15f;
     [SerializeField] private float bound = 1f;
@@ -12,18 +14,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float temp = 0;
     private bool canMove = false;
     private Touch theTouch;
-
+    #region 
     public float targetValue;
     public float timeThreshold = 2f; // Minimum ayný deðerde kalma süresi
     private float stableTime = 0f;
+    #endregion
+    [SerializeField] private GameObject generalBody;
+    [SerializeField] private GameObject upBody;
+    [SerializeField] private GameObject torso;
+    [SerializeField] private GameObject head;
 
+    [SerializeField] private GameObject bodyPiece;
     private void Start()
     {
-      //  rb = GetComponent<Rigidbody>(); 
+        //  rb = GetComponent<Rigidbody>(); 
     }
     private void FixedUpdate()
     {
-      Movement();
+        Movement();
     }
     private void Movement()
     {
@@ -57,8 +65,6 @@ public class PlayerController : MonoBehaviour
 
                 CalcStable(coefficient);
 
-
-
             }
             if (theTouch.phase == TouchPhase.Ended)
             {
@@ -81,6 +87,32 @@ public class PlayerController : MonoBehaviour
         {
             stableTime = 0f;
         }
+    }
+
+    public void GetFatOrSlim(float value)
+    {
+        value = value / 150;
+        generalBody.transform.DOScale(generalBody.transform.localScale + new Vector3(value, 0, value), 1f);
+    }
+
+    public void GetTallOrShort(float value)
+    {
+        value = value / 100;
+        float temp = (value) / 0.5f * 0.2f;
+        print(temp);
+        torso.transform.DOScale(new Vector3(torso.transform.localScale.x, torso.transform.localScale.y + value, torso.transform.localScale.z), 1f);
+        head.transform.DOMoveY(head.transform.position.y + temp, 1f);
+        upBody.transform.DOMoveY(upBody.transform.position.y + temp, 1f);
+    }
+
+    public void Hit(Transform hitPoint)
+    {
+        GetTallOrShort(-50);
+        Vector3 spawnPoint = new Vector3(transform.position.x, hitPoint.position.y, hitPoint.position.z - (generalBody.transform.localScale.x * 0.2f * 2));
+        GameObject bodyPieceClone = Instantiate(bodyPiece, spawnPoint, Quaternion.identity);
+        bodyPieceClone.GetComponent<Rigidbody>().AddForce(new Vector3(0, 2, -1) * force);
+        Destroy(bodyPieceClone, 3f);
+
     }
 
 }
