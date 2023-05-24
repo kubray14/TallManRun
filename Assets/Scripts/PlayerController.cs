@@ -5,7 +5,6 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    public float force;
     [SerializeField] private float forwardSpeed = 1f;
     [SerializeField] private float rotateSensitivity = 15f;
     [SerializeField] private float bound = 1f;
@@ -25,10 +24,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject head;
 
     [SerializeField] private GameObject bodyPiece;
-    private void Start()
-    {
-        //  rb = GetComponent<Rigidbody>(); 
-    }
     private void FixedUpdate()
     {
         Movement();
@@ -110,9 +105,8 @@ public class PlayerController : MonoBehaviour
         GetTallOrShort(-50);
         Vector3 spawnPoint = new Vector3(transform.position.x, hitPoint.position.y, hitPoint.position.z - (generalBody.transform.localScale.x * 0.2f * 2));
         GameObject bodyPieceClone = Instantiate(bodyPiece, spawnPoint, Quaternion.identity);
-        bodyPieceClone.GetComponent<Rigidbody>().AddForce(new Vector3(0, 2, -1) * force);
+        bodyPieceClone.GetComponent<Rigidbody>().AddForce(new Vector3(0, 2, -1));
         Destroy(bodyPieceClone, 3f);
-
     }
 
 }
