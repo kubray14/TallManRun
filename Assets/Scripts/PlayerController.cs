@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float temp = 0;
     private float minSize = 0.05f;
     private float minSizeTorso = 0.5f;
+    private float diamondScore = 0;
     private bool canMove = false;
     private bool isNearToDead = false;
     private Touch theTouch;
@@ -29,10 +30,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject head;
     [SerializeField] private GameObject bodyPiecePrefab;
     private Rigidbody rigidbody;
+    private Animator anim;
 
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
         canMove = true;
     }
 
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour
             theTouch = Input.GetTouch(0);
             if (theTouch.phase == TouchPhase.Stationary || theTouch.phase == TouchPhase.Moved)
             {
+                anim.SetBool("Run", true);
                 float coefficient = (theTouch.deltaPosition.x / Screen.width);
 
                 rotateValue = coefficient * rotateSensitivity;
@@ -67,9 +71,11 @@ public class PlayerController : MonoBehaviour
                         transform.position += transform.forward * forwardSpeed * Time.deltaTime;
                     }
                 }
-
                 CalcStable(coefficient);
-
+            }
+            if (theTouch.phase == TouchPhase.Ended)
+            {
+                anim.SetBool("Run", false);
             }
         }
     }
@@ -167,8 +173,9 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(float jumpForce)
     {
+        anim.SetBool("Jump", true);
         transform.forward = Vector3.forward;
-        rigidbody.AddForce((Vector3.forward + Vector3.up * 2) * jumpForce, ForceMode.Impulse);
+        rigidbody.AddForce((Vector3.forward + Vector3.up * 2.5f) * jumpForce, ForceMode.Impulse);
     }
 
     public void StopMovement()
@@ -185,7 +192,14 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
+            anim.SetBool("Jump", false);
             StartMovement();
+        }
+        else if (collision.gameObject.CompareTag("Diamond"))
+        {
+            diamondScore++;
+            collision.gameObject.SetActive(false);
+            //diamond toplama sesi 
         }
     }
 

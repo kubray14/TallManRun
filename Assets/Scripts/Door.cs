@@ -12,8 +12,7 @@ public class Door : MonoBehaviour
     private void Awake()
     {
         text = GetComponentInChildren<TMP_Text>();
-        string x = value > 0 ? isHeight ? "UZAMA" : "SISMANLAMA" : isHeight ? "KISALMA" : "ZAYIFLAMA";
-        text.text = value.ToString() + x;
+        text.text = value.ToString();
     }
     private void OnTriggerEnter(Collider other)
     {
