@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetBool("Jump", true);
         transform.forward = Vector3.forward;
-        rigidbody.AddForce((Vector3.forward + Vector3.up * 2.5f) * jumpForce, ForceMode.Impulse);
+        rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
     }
 
     public void StopMovement()
@@ -195,12 +195,17 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("Jump", false);
             StartMovement();
         }
-        else if (collision.gameObject.CompareTag("Diamond"))
-        {
-            diamondScore++;
-            collision.gameObject.SetActive(false);
-            //diamond toplama sesi 
-        }
+        
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Diamond"))
+                {
+                    diamondScore++;
+                    other.gameObject.SetActive(false);
+                    //diamond toplama sesi 
+                }
     }
 
 }

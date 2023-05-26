@@ -12,7 +12,7 @@ public class Door : MonoBehaviour
     private void Awake()
     {
         text = GetComponentInChildren<TMP_Text>();
-        if (value < 0)
+        if (value < 1)
         {
             text.text = (value * -1).ToString();
         }
