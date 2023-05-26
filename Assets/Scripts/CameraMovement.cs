@@ -16,7 +16,6 @@ public class CameraMovement : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 targetPosition = player.position + offset;
-        targetPosition.y = transform.position.y; // Eðer yükseklik deðiþmemesini istiyorsanýz y eksenini sabit tutun
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
     }
 }

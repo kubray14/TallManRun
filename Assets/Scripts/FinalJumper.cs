@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Jumper : MonoBehaviour
+public class FinalJumper : MonoBehaviour
 {
     [SerializeField] private float jumpForce = 7;
 

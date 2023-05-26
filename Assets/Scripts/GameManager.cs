@@ -27,4 +27,9 @@ public class GameManager : MonoBehaviour
     {
         FindObjectOfType<GameFinishUI>().LevelFail();
     }
+
+    public void LevelFailed()
+    {
+
+    }
 }

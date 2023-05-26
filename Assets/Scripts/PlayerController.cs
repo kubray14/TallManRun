@@ -5,7 +5,6 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float force = 50f;
     [SerializeField] private float tweenTime = 1f;
     [SerializeField] private float forwardSpeed = 1f;
     [SerializeField] private float rotateSensitivity = 15f;
@@ -16,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private float minSize = 0.05f;
     private float minSizeTorso = 0.5f;
     private bool canMove = false;
+    private bool isNearToDead = false;
     private Touch theTouch;
     #region 
     public float targetValue;
@@ -27,14 +27,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject torso;
     [SerializeField] private GameObject hips;
     [SerializeField] private GameObject head;
+    [SerializeField] private GameObject bodyPiecePrefab;
+    private Rigidbody rigidbody;
 
-    [SerializeField] private GameObject bodyPiece;
-
-    private bool isNearToDead = false;
+    private void Awake()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+        canMove = true;
+    }
 
     private void Update()
     {
-        Movement();
+        if (canMove)
+        {
+            Movement();
+        }
     }
 
     private void Movement()
@@ -42,10 +49,6 @@ public class PlayerController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             theTouch = Input.GetTouch(0);
-            if (theTouch.phase == TouchPhase.Began)
-            {
-                canMove = true;
-            }
             if (theTouch.phase == TouchPhase.Stationary || theTouch.phase == TouchPhase.Moved)
             {
                 float coefficient = (theTouch.deltaPosition.x / Screen.width);
@@ -67,10 +70,6 @@ public class PlayerController : MonoBehaviour
 
                 CalcStable(coefficient);
 
-            }
-            if (theTouch.phase == TouchPhase.Ended)
-            {
-                canMove = false;
             }
         }
     }
@@ -105,11 +104,13 @@ public class PlayerController : MonoBehaviour
                 }
                 hips.transform.DOScale(Vector3.zero, tweenTime).OnComplete(() =>
                 {
-                    GetComponent<Collider>().enabled = false;
+                    GetComponent<CapsuleCollider>().isTrigger = true;
+                    rigidbody.useGravity = false;
                     head.GetComponent<Collider>().isTrigger = false;
                     Rigidbody headRb = head.AddComponent<Rigidbody>();
-                    headRb.AddForce(new Vector3(0, 0, force), ForceMode.Impulse);
+                    headRb.AddForce(new Vector3(0, 0, 3), ForceMode.Impulse);
                     head.transform.parent = null;
+                    canMove = false;
                     print("Game Over");
                 });
             }
@@ -156,11 +157,35 @@ public class PlayerController : MonoBehaviour
         if (GetTallOrShort(-25))
         {
             Vector3 spawnPoint = new Vector3(transform.position.x, hitPoint.position.y, transform.position.z);
-            GameObject bodyPieceClone = Instantiate(bodyPiece, spawnPoint, Quaternion.identity);
+            GameObject bodyPieceClone = Instantiate(bodyPiecePrefab, spawnPoint, Quaternion.identity);
             Rigidbody pieceRb = bodyPieceClone.GetComponent<Rigidbody>();
             pieceRb.AddForce(new Vector3(0, 1, -0.05f));
             pieceRb.AddTorque(Random.insideUnitSphere.normalized * 100);
             Destroy(bodyPieceClone, 3f);
+        }
+    }
+
+    public void Jump(float jumpForce)
+    {
+        transform.forward = Vector3.forward;
+        rigidbody.AddForce((Vector3.forward + Vector3.up * 2) * jumpForce, ForceMode.Impulse);
+    }
+
+    public void StopMovement()
+    {
+        canMove = false;
+    }
+
+    public void StartMovement()
+    {
+        canMove = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            StartMovement();
         }
     }
 
