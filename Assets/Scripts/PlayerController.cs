@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private float force = 50f;
+    [SerializeField] private float tweenTime = 1f;
     [SerializeField] private float forwardSpeed = 1f;
     [SerializeField] private float rotateSensitivity = 15f;
     [SerializeField] private float bound = 1f;
@@ -24,14 +26,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject upBody;
     [SerializeField] private GameObject torso;
     [SerializeField] private GameObject hips;
+    [SerializeField] private GameObject head;
 
     [SerializeField] private GameObject bodyPiece;
 
     private bool isNearToDead = false;
-    private void FixedUpdate()
+
+    private void Update()
     {
         Movement();
     }
+
     private void Movement()
     {
         if (Input.touchCount > 0)
@@ -50,9 +55,7 @@ public class PlayerController : MonoBehaviour
                 {
                     temp += rotateValue;
                     transform.eulerAngles += new Vector3(0, rotateValue, 0);
-
                 }
-
 
                 if ((transform.position + transform.forward * forwardSpeed * Time.deltaTime).x < bound)
                 {
@@ -92,47 +95,58 @@ public class PlayerController : MonoBehaviour
     {
         value = value / 100;
 
-        if (bodyParts[0].transform.localScale.x + value < minSize)
+        if ((bodyParts[0].transform.localScale.x + value) + value * 0.001f <= minSize)
         {
-            print("1");
-            foreach (GameObject obj in bodyParts)
+            if (isNearToDead)
             {
-                obj.transform.DOScale(new Vector3(minSize, obj.transform.localScale.y, minSize), 1f);
+                foreach (GameObject obj in bodyParts)
+                {
+                    obj.transform.DOScale(Vector3.zero, tweenTime);
+                }
+                hips.transform.DOScale(Vector3.zero, tweenTime).OnComplete(() =>
+                {
+                    GetComponent<Collider>().enabled = false;
+                    head.GetComponent<Collider>().isTrigger = false;
+                    Rigidbody headRb = head.AddComponent<Rigidbody>();
+                    headRb.AddForce(new Vector3(0, 0, force), ForceMode.Impulse);
+                    head.transform.parent = null;
+                    print("Game Over");
+                });
             }
-            hips.transform.DOScale(new Vector3(minSize * 2, hips.transform.localScale.y, minSize * 2), 1f);
-        }
-        else if (bodyParts[0].transform.localScale.x == minSize)
-        {
-            print("2");
-            foreach (GameObject obj in bodyParts)
+            else
             {
-                obj.transform.DOScale(Vector3.zero, 1f);
+                isNearToDead = true;
+                foreach (GameObject obj in bodyParts)
+                {
+                    obj.transform.DOScale(new Vector3(minSize, obj.transform.localScale.y, minSize), tweenTime);
+                }
+                hips.transform.DOScale(new Vector3(minSize, hips.transform.localScale.y, minSize), tweenTime);
             }
-            hips.transform.DOScale(Vector3.zero, 1f).OnComplete(() => { print("Game Over"); });
+
         }
         else
         {
-            print("3");
+            isNearToDead = false;
             foreach (GameObject obj in bodyParts)
             {
-                obj.transform.DOScale(obj.transform.localScale + new Vector3(value, 0, value), 1f);
+                obj.transform.DOScale(obj.transform.localScale + new Vector3(value, 0, value), tweenTime);
             }
-            hips.transform.DOScale(hips.transform.localScale + new Vector3(value, value * 0.5f, value), 1f);
+            hips.transform.DOScale(hips.transform.localScale + new Vector3(value, 0, value), tweenTime);
         }
     }
 
     public bool GetTallOrShort(float value)
     {
         value = value / 100;
-        if (torso.transform.localScale.y + value <= minSizeTorso)
+        if (torso.transform.localScale.y + value < minSizeTorso)
         {
             GetFatOrSlim(value * 100);
             return false;
         }
         else
         {
-            torso.transform.DOScaleY(torso.transform.localScale.y + value, 1f);
-            upBody.transform.DOMoveY(upBody.transform.position.y + value, 1f);
+            torso.transform.DOScaleY(torso.transform.localScale.y + value, tweenTime);
+            upBody.transform.DOMoveY(upBody.transform.position.y + value, tweenTime);
             return true;
         }
     }

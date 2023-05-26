@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 622068731445285979}
   - component: {fileID: 8318086590049542100}
   - component: {fileID: 2097643851276691617}
+  - component: {fileID: 1346860386}
   m_Layer: 0
   m_Name: Red round_3
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8726685396253016204}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.000000004967054, y: 0.18419737, z: 28.924154}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -97,3 +98,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6990363, y: 0.040638596, z: 0.69903564}
   m_Center: {x: 0, y: 0.035929725, z: 0.0000009536743}
+--- !u!114 &1346860386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8726685396253016204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ead5862a82c46947938bc60fa0f41be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

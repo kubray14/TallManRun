@@ -721,7 +721,7 @@ Transform:
   m_GameObject: {fileID: 8146382987291446818}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.9, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.75, z: 0.15}
+  m_LocalScale: {x: 0.15, y: 0.5, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8146382987530640942}
@@ -823,6 +823,7 @@ GameObject:
   - component: {fileID: 8146382987300687943}
   - component: {fileID: 8146382987300687940}
   - component: {fileID: 8146382987300687941}
+  - component: {fileID: 1703827760397941740}
   m_Layer: 0
   m_Name: Player_Prefa
   m_TagString: Player
@@ -839,8 +840,8 @@ Transform:
   m_GameObject: {fileID: 8146382987300687994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8146382986325536467}
   - {fileID: 8146382987291446817}
@@ -900,6 +901,41 @@ CapsuleCollider:
   m_Height: 2.4
   m_Direction: 1
   m_Center: {x: 0, y: 1.2, z: 0}
+--- !u!114 &1703827760397941740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146382987300687994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adf6e25a361abe04eb30dfff35632630, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forwardSpeed: 2
+  rotateSensitivity: 75
+  bound: 4
+  rotateBound: 60
+  rotateValue: 0
+  temp: 0
+  targetValue: 0
+  timeThreshold: 2
+  bodyParts:
+  - {fileID: 8146382987313087290}
+  - {fileID: 8146382986771468316}
+  - {fileID: 8146382985877458756}
+  - {fileID: 8146382986280864183}
+  - {fileID: 8146382987291446818}
+  - {fileID: 8146382986609772273}
+  - {fileID: 8146382985821845385}
+  - {fileID: 8146382987538981464}
+  - {fileID: 8146382987298996545}
+  - {fileID: 8146382987521697558}
+  upBody: {fileID: 8146382986325536468}
+  torso: {fileID: 8146382987291446818}
+  hips: {fileID: 8146382986879468066}
+  bodyPiece: {fileID: 1761313402824754326, guid: 212bcedf0248ba64d8a0cfd69bd1190e, type: 3}
 --- !u!1 &8146382987303089361
 GameObject:
   m_ObjectHideFlags: 0
@@ -926,7 +962,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8146382987303089361}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.49999988, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []

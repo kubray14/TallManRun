@@ -8,7 +8,7 @@ public class Obstacle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out PlayerController playerController))
+        if (other.gameObject.transform.root.TryGetComponent(out PlayerController playerController))
         {
             playerController.Hit(hitPoint);
         }
