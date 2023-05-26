@@ -7,18 +7,34 @@ public class Door : MonoBehaviour
 {
     [SerializeField] private float value;
     [SerializeField] private bool isHeight;
+    [SerializeField] private bool isMultiplier;
     private TMP_Text text;
 
     private void Awake()
     {
         text = GetComponentInChildren<TMP_Text>();
-        if (value < 1)
+        if (value < 0)
         {
-            text.text = (value * -1).ToString();
+            if (isMultiplier)
+            {
+                text.text = (value).ToString();
+            }
+            else
+            {
+                text.text = (value * -100).ToString();
+            }
+
         }
         else
         {
-            text.text = value.ToString();
+            if (isMultiplier)
+            {
+                text.text = (value).ToString();
+            }
+            else
+            {
+                text.text = (value * 100).ToString();
+            }
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -27,11 +43,11 @@ public class Door : MonoBehaviour
         {
             if (isHeight)
             {
-                playerController.GetTallOrShort(value);
+                playerController.GetTallOrShort(value, isMultiplier);
             }
             else
             {
-                playerController.GetFatOrSlim(value);
+                playerController.GetFatOrSlim(value, isMultiplier);
             }
 
         }

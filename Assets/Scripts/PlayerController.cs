@@ -96,10 +96,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void GetFatOrSlim(float value)
+    public void GetFatOrSlim(float value, bool isMultiplier)
     {
-        value = value / 100;
-
         if ((bodyParts[0].transform.localScale.x + value) + value * 0.001f <= minSize)
         {
             if (isNearToDead)
@@ -134,33 +132,72 @@ public class PlayerController : MonoBehaviour
         else
         {
             isNearToDead = false;
-            foreach (GameObject obj in bodyParts)
+
+            if (isMultiplier)
             {
-                obj.transform.DOScale(obj.transform.localScale + new Vector3(value, 0, value), tweenTime);
+                foreach (GameObject obj in bodyParts)
+                {
+                    obj.transform.DOScale(new Vector3(obj.transform.localScale.x * value, obj.transform.localScale.y, obj.transform.localScale.z * value), tweenTime);
+                }
+                hips.transform.DOScale(new Vector3(hips.transform.localScale.x * value, hips.transform.localScale.y, hips.transform.localScale.z * value), tweenTime);
             }
-            hips.transform.DOScale(hips.transform.localScale + new Vector3(value, 0, value), tweenTime);
+            else
+            {
+                foreach (GameObject obj in bodyParts)
+                {
+                    obj.transform.DOScale(obj.transform.localScale + new Vector3(value, 0, value), tweenTime);
+                }
+                hips.transform.DOScale(hips.transform.localScale + new Vector3(value, 0, value), tweenTime);
+            }
+
         }
     }
 
-    public bool GetTallOrShort(float value)
+    public bool GetTallOrShort(float value, bool isMultiplier)
     {
-        value = value / 100;
-        if (torso.transform.localScale.y + value < minSizeTorso)
+        if (isMultiplier)
         {
-            GetFatOrSlim(value * 100);
-            return false;
+            if (torso.transform.localScale.y * value < minSizeTorso)
+            {
+                if (torso.transform.localScale.y <= minSizeTorso + (minSizeTorso * 0.01f))
+                {
+                    GetFatOrSlim(value, isMultiplier);
+                    return false;
+                }
+                else
+                {
+                    torso.transform.DOScaleY(minSizeTorso, tweenTime);
+                    upBody.transform.DOMoveY(0.56f, tweenTime);
+                    return true;
+                }
+
+            }
+            else
+            {
+                torso.transform.DOScaleY(torso.transform.localScale.y * value, tweenTime);
+                upBody.transform.DOMoveY(upBody.transform.position.y * value, tweenTime);
+                return true;
+            }
         }
         else
         {
-            torso.transform.DOScaleY(torso.transform.localScale.y + value, tweenTime);
-            upBody.transform.DOMoveY(upBody.transform.position.y + value, tweenTime);
-            return true;
+            if (torso.transform.localScale.y + value < minSizeTorso)
+            {
+                GetFatOrSlim(value, isMultiplier);
+                return false;
+            }
+            else
+            {
+                torso.transform.DOScaleY(torso.transform.localScale.y + value, tweenTime);
+                upBody.transform.DOMoveY(upBody.transform.position.y + value, tweenTime);
+                return true;
+            }
         }
     }
 
     public void Hit(Transform hitPoint)
     {
-        if (GetTallOrShort(-25))
+        if (GetTallOrShort(-25, false))
         {
             Vector3 spawnPoint = new Vector3(transform.position.x, hitPoint.position.y, transform.position.z);
             GameObject bodyPieceClone = Instantiate(bodyPiecePrefab, spawnPoint, Quaternion.identity);
@@ -195,17 +232,16 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("Jump", false);
             StartMovement();
         }
-        
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Diamond"))
-                {
-                    diamondScore++;
-                    other.gameObject.SetActive(false);
-                    //diamond toplama sesi 
-                }
+        {
+            diamondScore++;
+            other.gameObject.SetActive(false);
+            //diamond toplama sesi 
+        }
     }
 
 }
