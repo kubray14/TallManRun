@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private float diamondScore = 0;
     private bool canMove = false;
     private bool isNearToDead = false;
+    [SerializeField] private bool onGround;
     private Touch theTouch;
     #region 
     public float targetValue;
@@ -29,12 +30,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject hips;
     [SerializeField] private GameObject head;
     [SerializeField] private GameObject bodyPiecePrefab;
-    private Rigidbody rigidbody;
+    private Rigidbody _rigidbody;
     private Animator anim;
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         canMove = true;
     }
@@ -54,7 +55,7 @@ public class PlayerController : MonoBehaviour
             theTouch = Input.GetTouch(0);
             if (theTouch.phase == TouchPhase.Stationary || theTouch.phase == TouchPhase.Moved)
             {
-                anim.SetBool("Run", true);
+                anim.SetBool("Walk", true);
                 float coefficient = (theTouch.deltaPosition.x / Screen.width);
 
                 rotateValue = coefficient * rotateSensitivity;
@@ -75,7 +76,7 @@ public class PlayerController : MonoBehaviour
             }
             if (theTouch.phase == TouchPhase.Ended)
             {
-                anim.SetBool("Run", false);
+                anim.SetBool("Walk", false);
             }
         }
     }
@@ -109,7 +110,7 @@ public class PlayerController : MonoBehaviour
                 hips.transform.DOScale(Vector3.zero, tweenTime).OnComplete(() =>
                 {
                     GetComponent<CapsuleCollider>().isTrigger = true;
-                    rigidbody.useGravity = false;
+                    _rigidbody.useGravity = false;
                     head.GetComponent<Collider>().isTrigger = false;
                     Rigidbody headRb = head.AddComponent<Rigidbody>();
                     headRb.AddForce(new Vector3(0, 0, 3), ForceMode.Impulse);
@@ -210,9 +211,14 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(float jumpForce)
     {
-        anim.SetBool("Jump", true);
-        transform.forward = Vector3.forward;
-        rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
+        if (onGround)
+        {
+            anim.SetBool("Jump", true);
+            transform.forward = Vector3.forward;
+            _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
+            onGround = false;
+        }
+
     }
 
     public void StopMovement()
@@ -229,8 +235,13 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            anim.SetBool("Jump", false);
-            StartMovement();
+            if (!onGround)
+            {
+                _rigidbody.velocity = Vector3.zero;
+                anim.SetBool("Jump", false);
+                StartMovement();
+                onGround = true;
+            }
         }
     }
 
