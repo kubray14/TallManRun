@@ -74,10 +74,10 @@ public class PlayerController : MonoBehaviour
                 }
                 CalcStable(coefficient);
             }
-            if (theTouch.phase == TouchPhase.Ended)
-            {
-                anim.SetBool("Walk", false);
-            }
+        }
+        else
+        {
+            anim.SetBool("Walk", false);
         }
     }
 
