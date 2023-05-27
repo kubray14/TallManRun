@@ -236,10 +236,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Diamond"))
+        if (other.gameObject.TryGetComponent(out Diamond diamond))
         {
             diamondScore++;
-            other.gameObject.SetActive(false);
+            diamond.Hit();
             //diamond toplama sesi 
         }
     }
