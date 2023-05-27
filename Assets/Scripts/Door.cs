@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
+    private ParticleSystem _particleSystem;
     [SerializeField] private float value;
     [SerializeField] private bool isHeight;
     [SerializeField] private bool isMultiplier;
@@ -12,6 +13,7 @@ public class Door : MonoBehaviour
 
     private void Awake()
     {
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
         text = GetComponentInChildren<TMP_Text>();
         if (value < 0)
         {
@@ -44,12 +46,13 @@ public class Door : MonoBehaviour
             if (isHeight)
             {
                 playerController.GetTallOrShort(value, isMultiplier);
+                _particleSystem.Play();
             }
             else
             {
                 playerController.GetFatOrSlim(value, isMultiplier);
+                _particleSystem.Play();
             }
-
         }
     }
 }
