@@ -9,6 +9,7 @@ public class Door : MonoBehaviour
     [SerializeField] private float value;
     [SerializeField] private bool isHeight;
     [SerializeField] private bool isMultiplier;
+    private bool isDone = false;
     private TMP_Text text;
 
     private void Awake()
@@ -43,16 +44,21 @@ public class Door : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out PlayerController playerController))
         {
-            if (isHeight)
+            if (!isDone)
             {
-                playerController.GetTallOrShort(value, isMultiplier);
-                _particleSystem.Play();
+                if (isHeight)
+                {
+                    playerController.GetTallOrShort(value, isMultiplier);
+                    _particleSystem.Play();
+                }
+                else
+                {
+                    playerController.GetFatOrSlim(value, isMultiplier);
+                    _particleSystem.Play();
+                }
+                isDone = true;
             }
-            else
-            {
-                playerController.GetFatOrSlim(value, isMultiplier);
-                _particleSystem.Play();
-            }
+
         }
     }
 }
