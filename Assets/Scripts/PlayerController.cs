@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                torso.transform.DOScaleY(torso.transform.localScale.y * value, tweenTime);
+                torso.transform.DOScaleY(torso.transform.localScale.y * value + 0.25f, tweenTime);
                 upBody.transform.DOMoveY(upBody.transform.position.y * value, tweenTime);
                 return true;
             }
@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                torso.transform.DOScaleY(torso.transform.localScale.y + value, tweenTime);
+                torso.transform.DOScaleY(torso.transform.localScale.y + value + 0.15f, tweenTime);
                 upBody.transform.DOMoveY(upBody.transform.position.y + value, tweenTime);
                 return true;
             }
@@ -198,7 +198,7 @@ public class PlayerController : MonoBehaviour
 
     public void Hit(Transform hitPoint)
     {
-        if (GetTallOrShort(-25, false))
+        if (GetTallOrShort(-15, false))
         {
             Vector3 spawnPoint = new Vector3(transform.position.x, hitPoint.position.y, transform.position.z);
             GameObject bodyPieceClone = Instantiate(bodyPiecePrefab, spawnPoint, Quaternion.identity);

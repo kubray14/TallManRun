@@ -10,6 +10,8 @@ public class Jumper : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out PlayerController playerController))
         {
+            other.transform.rotation = Quaternion.Euler(0, 0, 0);
+            other.transform.position = new Vector3(transform.position.x, other.transform.position.y, transform.position.z);
             playerController.Jump(jumpForce);
             playerController.StopMovement();
         }
