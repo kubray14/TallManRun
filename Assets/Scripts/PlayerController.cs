@@ -191,8 +191,9 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                print(value);
                 torso.transform.DOScaleY(torso.transform.localScale.y + value, tweenTime);
-                upBody.transform.DOMoveY(upBody.transform.position.y + value, tweenTime);
+                upBody.transform.DOMoveY(upBody.transform.position.y + ((value * 2) * transform.localScale.y), tweenTime);
                 return true;
             }
         }
