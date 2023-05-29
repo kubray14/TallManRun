@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private float minSize = 0.05f;
     private float minSizeTorso = 0.5f;
     private float diamondScore = 0;
-    private bool canMove = false;
+    public bool canMove = false;
     private bool isNearToDead = false;
     [SerializeField] private bool onGround;
     private Touch theTouch;
@@ -226,14 +226,13 @@ public class PlayerController : MonoBehaviour
 
     public void FinalJump(float jumpForce)
     {
-        if (onGround)
-        {
             Time.timeScale = 0.5f;
+            DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
             anim.SetBool("Kick", true);
             transform.forward = Vector3.forward;
             _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
             onGround = false;
-        }
+        
     }
 
     public void StopMovement()
@@ -261,10 +260,17 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("FinalGround"))
         {
+            collision.gameObject.tag = "Untagged";
             UpbodyEnd();
             anim.SetBool("Run", true);
             canMove = false;
-            // Auto run.
+            transform.DOMove(new Vector3(0, transform.position.y, 50), 5f).OnComplete(() => { FinalJump(6.4f); });
+        }
+        else if (collision.gameObject.CompareTag("Boss"))
+        {
+            anim.SetBool("Kick", false);
+            _rigidbody.isKinematic = false;
+
         }
     }
 
