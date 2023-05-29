@@ -216,6 +216,7 @@ public class PlayerController : MonoBehaviour
     {
         if (onGround)
         {
+            UpbodyStart();
             anim.SetBool("Jump", true);
             transform.forward = Vector3.forward;
             _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
@@ -257,6 +258,13 @@ public class PlayerController : MonoBehaviour
                 onGround = true;
                 UpbodyEnd();
             }
+        }
+        else if (collision.gameObject.CompareTag("FinalGround"))
+        {
+            UpbodyEnd();
+            anim.SetBool("Run", true);
+            canMove = false;
+            // Auto run.
         }
     }
 

@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Diamond
   - FinishLine
+  - FinalGround
   layers:
   - Default
   - TransparentFX
