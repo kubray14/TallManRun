@@ -10,7 +10,7 @@ public class FinalJumper : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out PlayerController playerController))
         {
-            playerController.Jump(jumpForce);
+            playerController.FinalJump(jumpForce);
             playerController.StopMovement();
         }
     }

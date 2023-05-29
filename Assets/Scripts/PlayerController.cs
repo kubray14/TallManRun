@@ -221,7 +221,18 @@ public class PlayerController : MonoBehaviour
             _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
             onGround = false;
         }
+    }
 
+    public void FinalJump(float jumpForce)
+    {
+        if (onGround)
+        {
+            Time.timeScale = 0.5f;
+            anim.SetBool("Kick", true);
+            transform.forward = Vector3.forward;
+            _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
+            onGround = false;
+        }
     }
 
     public void StopMovement()
@@ -244,6 +255,7 @@ public class PlayerController : MonoBehaviour
                 anim.SetBool("Jump", false);
                 StartMovement();
                 onGround = true;
+                UpbodyEnd();
             }
         }
     }
@@ -256,6 +268,16 @@ public class PlayerController : MonoBehaviour
             diamond.Hit();
             //diamond toplama sesi 
         }
+    }
+
+    public void UpbodyStart()
+    {
+        upBody.transform.parent = torso.transform;
+    }
+    public void UpbodyEnd()
+    {
+        upBody.transform.parent = transform;
+        upBody.transform.position = new Vector3(transform.position.x, upBody.transform.position.y, transform.position.z);
     }
 
 }
