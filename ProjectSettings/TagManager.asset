@@ -9,6 +9,7 @@ TagManager:
   - FinishLine
   - FinalGround
   - Boss
+  - BossHead
   layers:
   - Default
   - TransparentFX

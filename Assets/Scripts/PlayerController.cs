@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Movement
     [SerializeField] private float tweenTime = 1f;
     [SerializeField] private float forwardSpeed = 1f;
     [SerializeField] private float rotateSensitivity = 15f;
@@ -12,32 +13,41 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float rotateBound = 0.5f;
     [SerializeField] float rotateValue = 0;
     [SerializeField] float temp = 0;
-    private float minSize = 0.05f;
-    private float minSizeTorso = 0.5f;
-    private float diamondScore = 0;
-    public bool canMove = false;
-    private bool isNearToDead = false;
     [SerializeField] private bool onGround;
     private Touch theTouch;
+    public bool canMove = false;
+    #endregion
     #region 
     public float targetValue;
     public float timeThreshold = 2f; // Minimum ayný deðerde kalma süresi
     private float stableTime = 0f;
     #endregion
+    #region Scale 
     [SerializeField] private List<GameObject> bodyParts;
     [SerializeField] private GameObject upBody;
     [SerializeField] private GameObject torso;
     [SerializeField] private GameObject hips;
     [SerializeField] private GameObject head;
     [SerializeField] private GameObject bodyPiecePrefab;
+    private float minSize = 0.05f;
+    private float minSizeTorso = 0.5f;
+    private bool isNearToDead = false;
+    #endregion
     private Rigidbody _rigidbody;
     private Animator anim;
+    private float diamondScore = 0;
+    [SerializeField] private GameObject finalUI;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         canMove = true;
+    }
+
+    private void Start()
+    {
+        DOTween.defaultEaseType = Ease.Linear;
     }
 
     private void Update()
@@ -226,13 +236,22 @@ public class PlayerController : MonoBehaviour
 
     public void FinalJump(float jumpForce)
     {
-            Time.timeScale = 0.5f;
-            DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
-            anim.SetBool("Kick", true);
-            transform.forward = Vector3.forward;
-            _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
-            onGround = false;
-        
+        Time.timeScale = 0.5f;
+        DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
+        anim.SetBool("Kick", true);
+        transform.forward = Vector3.forward;
+        Transform boss = GameObject.FindGameObjectWithTag("BossHead").transform;
+        float jumpForceY = 3f;
+        transform.DOJump(boss.transform.position, jumpForceY, 1, 1, false).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            anim.SetBool("Kick", false);
+            _rigidbody.isKinematic = true;
+            finalUI.SetActive(true);
+            finalUI.transform.LookAt(Camera.main.transform.position);
+        });
+        //_rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
+        onGround = false;
+
     }
 
     public void StopMovement()
@@ -264,14 +283,12 @@ public class PlayerController : MonoBehaviour
             UpbodyEnd();
             anim.SetBool("Run", true);
             canMove = false;
-            transform.DOMove(new Vector3(0, transform.position.y, 50), 5f).OnComplete(() => { FinalJump(6.4f); });
+            transform.DOMove(new Vector3(0, transform.position.y, 50), 3.5f).SetEase(Ease.Linear).OnComplete(() => { FinalJump(6.4f); });
         }
-        else if (collision.gameObject.CompareTag("Boss"))
-        {
-            anim.SetBool("Kick", false);
-            _rigidbody.isKinematic = false;
-
-        }
+        //else if (collision.gameObject.CompareTag("Boss"))
+        //{
+        //    anim.SetBool("Kick", false);
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
@@ -281,6 +298,13 @@ public class PlayerController : MonoBehaviour
             diamondScore++;
             diamond.Hit();
             //diamond toplama sesi 
+        }
+        else if (other.gameObject.CompareTag("Boss"))
+        {
+            // Camera Up
+            print("Camera Rotating Up");
+            other.gameObject.tag = "Untagged";
+            Camera.main.GetComponent<CameraMovement>().FinalMovement();
         }
     }
 
