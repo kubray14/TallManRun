@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Transform upbodyPivot;
     #region Movement
     [SerializeField] private float tweenTime = 1f;
     [SerializeField] private float forwardSpeed = 1f;
@@ -236,6 +237,8 @@ public class PlayerController : MonoBehaviour
 
     public void FinalJump(float jumpForce)
     {
+        upBody.transform.parent = transform;
+        StartCoroutine(UpbodyFollow_Coroutine());
         Time.timeScale = 0.5f;
         DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
         anim.SetBool("Kick", true);
@@ -257,6 +260,15 @@ public class PlayerController : MonoBehaviour
         //_rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
         onGround = false;
 
+    }
+
+    IEnumerator UpbodyFollow_Coroutine()
+    {
+        while (true)
+        {
+            yield return null;
+            upBody.transform.position = upbodyPivot.position - upbodyPivot.transform.up * 0.1f;
+        }
     }
 
     public void StopMovement()
@@ -292,6 +304,9 @@ public class PlayerController : MonoBehaviour
         {
             collision.gameObject.tag = "Untagged";
             UpbodyEnd();
+            UpbodyStart();
+            upBody.transform.localPosition = new Vector3(upBody.transform.localPosition.x, upBody.transform.localPosition.y, 0);
+            upBody.gameObject.GetComponent<Animator>().SetBool("Run", true);
             anim.SetBool("Run", true);
             canMove = false;
             transform.DOMove(new Vector3(0, transform.position.y, 50), 3.5f).SetEase(Ease.Linear).OnComplete(() => { FinalJump(6.4f); });

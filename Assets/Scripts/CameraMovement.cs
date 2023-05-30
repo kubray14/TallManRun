@@ -34,17 +34,17 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    public void calcOffset()
+    public void CalcOffset()
     {
         offset = transform.position - player.position;
         isFinished = false;
     }
-
+    
     public void FinalMovement()
     {
         isFinishedLast = true;
-        float tweenTime = 2f;
-        transform.DOMove(new Vector3(0.3f, 6.2f, 56.5f), tweenTime).SetEase(Ease.Linear).SetUpdate(true);
+        float tweenTime = 3f;
+        transform.DOMove(new Vector3(0.3f, 6.5f, 56.5f), tweenTime).SetEase(Ease.Linear).SetUpdate(true);
         transform.DORotateQuaternion(Quaternion.Euler(75, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z), tweenTime).SetEase(Ease.Linear).SetUpdate(true);
     }
 }
