@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour
                     head.transform.parent = null;
                     canMove = false;
                     print("Game Over");
+                    DOTween.KillAll();
                 });
             }
             else
