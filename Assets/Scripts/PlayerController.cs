@@ -239,6 +239,7 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0.5f;
         DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
         anim.SetBool("Kick", true);
+        anim.SetBool("Run", false);
         transform.forward = Vector3.forward;
         Transform boss = GameObject.FindGameObjectWithTag("BossHead").transform;
         float jumpForceY = 3f;
@@ -246,8 +247,12 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("Kick", false);
             _rigidbody.isKinematic = true;
+            finalUI.transform.parent = null;
             finalUI.SetActive(true);
-            finalUI.transform.LookAt(Camera.main.transform.position);
+            finalUI.transform.forward = -Camera.main.transform.forward;
+            FindObjectOfType<Boss>().Die();
+            StartCoroutine(OpenGravity_Coroutine());
+
         });
         //_rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
         onGround = false;
@@ -262,6 +267,12 @@ public class PlayerController : MonoBehaviour
     public void StartMovement()
     {
         canMove = true;
+    }
+
+    private IEnumerator OpenGravity_Coroutine()
+    {
+        yield return new WaitForSecondsRealtime(1.5f);
+        _rigidbody.isKinematic = false;
     }
 
     private void OnCollisionEnter(Collision collision)

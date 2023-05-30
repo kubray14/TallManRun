@@ -9,6 +9,7 @@ public class CameraMovement : MonoBehaviour
     public float followSpeed = 5f;
     public Vector3 offset;
     public bool isFinished = false;
+    public bool isFinishedLast = false;
 
     private void Start()
     {
@@ -17,18 +18,20 @@ public class CameraMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!isFinished)
+        if (!isFinishedLast)
         {
-            Vector3 targetPosition = player.position + offset;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+            if (!isFinished)
+            {
+                Vector3 targetPosition = player.position + offset;
+                transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+            }
+            else
+            {
+                Vector3 targetPosition = player.position + offset;
+                targetPosition.x = transform.position.x;
+                transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+            }
         }
-        else
-        {
-            Vector3 targetPosition = player.position + offset;
-            targetPosition.x = transform.position.x;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
-        }
-
     }
 
     public void calcOffset()
@@ -39,10 +42,9 @@ public class CameraMovement : MonoBehaviour
 
     public void FinalMovement()
     {
-        offset.x = 0;
-        offset.y *= 1.3f;
-        offset.z /= 2;
-        transform.DOMoveX(0, 1f).SetUpdate(true);
-        transform.DORotateQuaternion(Quaternion.Euler(75, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z), 1f).SetUpdate(true);
+        isFinishedLast = true;
+        float tweenTime = 2f;
+        transform.DOMove(new Vector3(0.3f, 6.2f, 56.5f), tweenTime).SetEase(Ease.Linear).SetUpdate(true);
+        transform.DORotateQuaternion(Quaternion.Euler(75, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z), tweenTime).SetEase(Ease.Linear).SetUpdate(true);
     }
 }
