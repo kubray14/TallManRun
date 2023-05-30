@@ -16,9 +16,10 @@ public class FinishObstacles : MonoBehaviour
         if (other.TryGetComponent(out PlayerController player))
         {
             float randNum = Random.value < 0.5f ? 1 : -1;
-            rb.AddForce(new Vector3(randNum * 2, 2, 2) *1.5f, ForceMode.Impulse);
+            rb.AddForce(new Vector3(randNum * 2, 2, 2) * 1.5f, ForceMode.Impulse);
             rb.useGravity = true;
             player.GetFatOrSlim(-0.01f, false);
+            player.StabilUpbody(-0.01f);
             cards.changeColor();
             gameObject.GetComponent<MeshCollider>().enabled = false;
             enabled = false;

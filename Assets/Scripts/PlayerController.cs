@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -210,6 +211,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void StabilUpbody(float value)
+    {
+        upBody.transform.DOScale(upBody.transform.localScale + new Vector3(value, 0, value), tweenTime);
+    }
 
     public void Hit(Transform hitPoint)
     {
@@ -249,6 +254,7 @@ public class PlayerController : MonoBehaviour
         float jumpForceY = 3f;
         transform.DOJump(boss.transform.position, jumpForceY, 1, 1, false).SetEase(Ease.Linear).OnComplete(() =>
         {
+            upBody.gameObject.GetComponent<Animator>().SetBool("Run", false);
             anim.SetBool("Kick", false);
             _rigidbody.isKinematic = true;
             finalUI.transform.parent = null;
@@ -312,10 +318,6 @@ public class PlayerController : MonoBehaviour
             canMove = false;
             transform.DOMove(new Vector3(0, transform.position.y, 50), 3.5f).SetEase(Ease.Linear).OnComplete(() => { FinalJump(6.4f); });
         }
-        //else if (collision.gameObject.CompareTag("Boss"))
-        //{
-        //    anim.SetBool("Kick", false);
-        //}
     }
 
     private void OnTriggerEnter(Collider other)
