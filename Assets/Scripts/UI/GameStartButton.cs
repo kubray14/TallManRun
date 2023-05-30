@@ -12,7 +12,6 @@ public class GameStartButton : MonoBehaviour, IPointerDownHandler
 
     public void StartGame()
     {
-        GameManager.Instance.StartGame();
-        gameObject.SetActive(false);
+        gameObject.transform.parent.gameObject.SetActive(false);
     }
 }

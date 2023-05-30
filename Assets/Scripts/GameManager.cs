@@ -14,11 +14,6 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
     }
-
-    public void StartGame()
-    {
-        
-    }
     public void LevelSuccess()
     {
         FindObjectOfType<GameFinishUI>().LevelSuccess();
@@ -26,10 +21,5 @@ public class GameManager : MonoBehaviour
     public void LevelFail()
     {
         FindObjectOfType<GameFinishUI>().LevelFail();
-    }
-
-    public void LevelFailed()
-    {
-
     }
 }
