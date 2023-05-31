@@ -6,6 +6,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private GameObject headPrefab;
     [SerializeField] private Transform upbodyPivot;
     #region Movement
     [SerializeField] private float tweenTime = 1f;
@@ -123,13 +124,16 @@ public class PlayerController : MonoBehaviour
                 {
                     GetComponent<CapsuleCollider>().isTrigger = true;
                     _rigidbody.useGravity = false;
-                    head.GetComponent<Collider>().isTrigger = false;
-                    Rigidbody headRb = head.AddComponent<Rigidbody>();
+                    head.SetActive(false);
+                    headPrefab.transform.position = head.transform.position;
+                    headPrefab.SetActive(true);
+                    Rigidbody headRb = headPrefab.AddComponent<Rigidbody>();
                     headRb.AddForce(new Vector3(0, 0, 3), ForceMode.Impulse);
-                    head.transform.parent = null;
+                    headPrefab.transform.parent = null;
                     canMove = false;
                     print("Game Over");
                     DOTween.KillAll();
+                    _rigidbody.isKinematic = true;
                 });
             }
             else
@@ -213,7 +217,11 @@ public class PlayerController : MonoBehaviour
     }
     public void StabilUpbody(float value)
     {
-        upBody.transform.DOScale(upBody.transform.localScale + new Vector3(value, 0, value), tweenTime);
+        //float factor = torso.transform.localScale.x / (torso.transform.localScale.x - value);
+        //upBody.transform.DOScale(upBody.transform.localScale + new Vector3((1 - factor) * (1 / torso.transform.localScale.x), 0, (1 - factor) * (1 / torso.transform.localScale.x)), tweenTime);
+        float factor = torso.transform.localScale.x / (torso.transform.localScale.x + value);
+        print("factor " + factor);
+        upBody.transform.DOScale(new Vector3((upBody.transform.localScale.x * factor), upBody.transform.localScale.y, (upBody.transform.localScale.z * factor)), tweenTime);
     }
 
     public void Hit(Transform hitPoint)
@@ -309,6 +317,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("FinalGround"))
         {
+            tweenTime = 0.08f;
             collision.gameObject.tag = "Untagged";
             UpbodyEnd();
             UpbodyStart();

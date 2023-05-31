@@ -18,8 +18,9 @@ public class FinishObstacles : MonoBehaviour
             float randNum = Random.value < 0.5f ? 1 : -1;
             rb.AddForce(new Vector3(randNum * 2, 2, 2) * 1.5f, ForceMode.Impulse);
             rb.useGravity = true;
-            player.GetFatOrSlim(-0.01f, false);
-            player.StabilUpbody(-0.01f);
+            float value = -0.015f;
+            player.GetFatOrSlim(value, false);
+            player.StabilUpbody(value);
             cards.changeColor();
             gameObject.GetComponent<MeshCollider>().enabled = false;
             enabled = false;
