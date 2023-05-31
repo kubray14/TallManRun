@@ -22,6 +22,7 @@ public class FinishObstacles : MonoBehaviour
             player.GetFatOrSlim(value, false);
             player.StabilUpbody(value);
             cards.changeColor();
+            Destroy(gameObject, 2f);
             gameObject.GetComponent<MeshCollider>().enabled = false;
             enabled = false;
         }

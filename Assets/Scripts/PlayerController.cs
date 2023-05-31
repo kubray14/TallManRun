@@ -255,6 +255,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(UpbodyFollow_Coroutine());
         Time.timeScale = 0.5f;
         DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
+        upBody.GetComponent<Animator>().enabled = false;
         anim.SetBool("Kick", true);
         anim.SetBool("Run", false);
         transform.forward = Vector3.forward;
@@ -322,6 +323,7 @@ public class PlayerController : MonoBehaviour
             UpbodyEnd();
             UpbodyStart();
             upBody.transform.localPosition = new Vector3(upBody.transform.localPosition.x, upBody.transform.localPosition.y, 0);
+            upBody.GetComponent<Animator>().enabled = true;
             upBody.gameObject.GetComponent<Animator>().SetBool("Run", true);
             anim.SetBool("Run", true);
             canMove = false;
