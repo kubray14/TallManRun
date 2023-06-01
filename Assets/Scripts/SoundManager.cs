@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     [SerializeField] private AudioClip diamondClip;
     [SerializeField] private AudioClip doorClip;
+    [SerializeField] private AudioClip obstacleClip;
     private AudioSource audioSource;
 
     private void Awake()
@@ -24,5 +25,9 @@ public class SoundManager : MonoBehaviour
     public void PlayDoorSound()
     {
         audioSource.PlayOneShot(doorClip);
+    }
+    public void PlayObstacleSound()
+    {
+        audioSource.PlayOneShot(obstacleClip);
     }
 }

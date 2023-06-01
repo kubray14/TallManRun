@@ -15,6 +15,7 @@ public class FinishObstacles : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerController player))
         {
+            SoundManager.instance.PlayObstacleSound();
             float randNum = Random.value < 0.5f ? 1 : -1;
             rb.AddForce(new Vector3(randNum * 2, 2, 2) * 1.5f, ForceMode.Impulse);
             rb.useGravity = true;

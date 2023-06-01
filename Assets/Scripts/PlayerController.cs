@@ -243,6 +243,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GetTallOrShort(-0.25f, false))
         {
+            SoundManager.instance.PlayObstacleSound();
             Vector3 spawnPoint = new Vector3(transform.position.x, hitPoint.position.y, transform.position.z);
             GameObject bodyPieceClone = Instantiate(bodyPiecePrefab, spawnPoint, Quaternion.identity);
             Rigidbody pieceRb = bodyPieceClone.GetComponent<Rigidbody>();

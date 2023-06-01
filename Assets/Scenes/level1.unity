@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5670,7 +5670,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281093357}
   m_LocalRotation: {x: 0.1564345, y: 0, z: 0, w: 0.98768836}
-  m_LocalPosition: {x: 0, y: 1.86, z: -1.91}
+  m_LocalPosition: {x: 0, y: 1.86, z: -1.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11033,6 +11033,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 277476375, guid: a961bbbc58db6254fb144d3381c06909, type: 3}
+      propertyPath: obstacleClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 93c492fa5a2d5b34e9ea2bf23b4037d6, type: 3}
     - target: {fileID: 4905621971227117324, guid: a961bbbc58db6254fb144d3381c06909, type: 3}
       propertyPath: m_Name
       value: Managers
