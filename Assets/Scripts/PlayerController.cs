@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using static UnityEngine.Rendering.DebugUI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -38,8 +38,10 @@ public class PlayerController : MonoBehaviour
     #endregion
     private Rigidbody _rigidbody;
     private Animator anim;
-    private float diamondScore = 0;
+    private int diamondScore = 0;
     [SerializeField] private GameObject finalUI;
+    [SerializeField] private TMP_Text scoreText;
+    private bool isCameFinalGround = false;
 
     private void Awake()
     {
@@ -122,18 +124,7 @@ public class PlayerController : MonoBehaviour
                 }
                 hips.transform.DOScale(Vector3.zero, tweenTime).OnComplete(() =>
                 {
-                    GetComponent<CapsuleCollider>().isTrigger = true;
-                    _rigidbody.useGravity = false;
-                    head.SetActive(false);
-                    headPrefab.transform.position = head.transform.position;
-                    headPrefab.SetActive(true);
-                    Rigidbody headRb = headPrefab.AddComponent<Rigidbody>();
-                    headRb.AddForce(new Vector3(0, 0, 3), ForceMode.Impulse);
-                    headPrefab.transform.parent = null;
-                    canMove = false;
-                    print("Game Over");
-                    DOTween.KillAll();
-                    _rigidbody.isKinematic = true;
+                    Death();
                 });
             }
             else
@@ -237,6 +228,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Death()
+    {
+        GetComponent<CapsuleCollider>().isTrigger = true;
+        _rigidbody.useGravity = false;
+        head.SetActive(false);
+        headPrefab.transform.position = head.transform.position;
+        headPrefab.SetActive(true);
+        Rigidbody headRb = headPrefab.AddComponent<Rigidbody>();
+        headRb.AddForce(new Vector3(0, 0, 3), ForceMode.Impulse);
+        headPrefab.transform.parent = null;
+        canMove = false;
+        print("Game Over");
+        DOTween.KillAll();
+        _rigidbody.isKinematic = true;
+        if (isCameFinalGround)
+        {
+            GameManager.Instance.LevelSuccess(diamondScore);
+        }
+        else
+        {
+            GameManager.Instance.LevelFail();
+        }
+
+    }
+
     public void Jump(float jumpForce)
     {
         if (onGround)
@@ -270,10 +286,29 @@ public class PlayerController : MonoBehaviour
             finalUI.transform.forward = -Camera.main.transform.forward;
             FindObjectOfType<Boss>().Die();
             StartCoroutine(OpenGravity_Coroutine());
+            StartCoroutine(Finish_Coroutine());
+            StartCoroutine(FinalUICameraLook());
 
         });
         //_rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
         onGround = false;
+
+    }
+
+    IEnumerator Finish_Coroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GameManager.Instance.LevelSuccessBoss(diamondScore);
+
+    }
+
+    IEnumerator FinalUICameraLook()
+    {
+        while (true)
+        {
+            yield return null;
+            finalUI.transform.LookAt(Camera.main.transform);
+        }
 
     }
 
@@ -317,6 +352,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("FinalGround"))
         {
+            isCameFinalGround = true;
             tweenTime = 0.08f;
             collision.gameObject.tag = "Untagged";
             UpbodyEnd();
@@ -333,9 +369,14 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out Diamond diamond))
         {
-            diamondScore++;
-            diamond.Hit();
-            //diamond toplama sesi 
+            if (!diamond.isFinished)
+            {
+                diamondScore++;
+                scoreText.text = diamondScore.ToString();
+                diamond.Hit();
+                //diamond toplama sesi 
+            }
+
         }
         else if (other.gameObject.CompareTag("Boss"))
         {
