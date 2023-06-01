@@ -23,12 +23,14 @@ public class CameraMovement : MonoBehaviour
             if (!isFinished)
             {
                 Vector3 targetPosition = player.position + offset;
+                targetPosition.y = Mathf.Clamp(targetPosition.y, 1.85f, 100);
                 transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
             }
             else
             {
                 Vector3 targetPosition = player.position + offset;
                 targetPosition.x = transform.position.x;
+                targetPosition.y = Mathf.Clamp(targetPosition.y, 1.85f, 100);
                 transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
             }
         }
@@ -39,7 +41,7 @@ public class CameraMovement : MonoBehaviour
         offset = transform.position - player.position;
         isFinished = false;
     }
-    
+
     public void FinalMovement()
     {
         isFinishedLast = true;
