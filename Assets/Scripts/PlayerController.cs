@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Material myMaterial;
+    [SerializeField] private Color startColor;
+    [SerializeField] private Color blueColor;
+    [SerializeField] private Color redColor;
     [SerializeField] private GameObject headPrefab;
     [SerializeField] private Transform upbodyPivot;
     #region Movement
@@ -52,7 +57,10 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+
         DOTween.defaultEaseType = Ease.Linear;
+        StartCoroutine(UpbodyFollow_Coroutine());
+        Time.timeScale = 1f;
     }
 
     private void Update()
@@ -112,8 +120,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void ColorChange(float value)
+    {
+        if (isCameFinalGround)
+            return;
+
+        if (value > 0)
+        {
+            myMaterial.DOColor(blueColor, tweenTime / 3).OnComplete(() =>
+            {
+                myMaterial.DOColor(startColor, tweenTime / 3);
+            });
+        }
+        else
+        {
+            myMaterial.DOColor(redColor, tweenTime / 3).OnComplete(() =>
+            {
+                myMaterial.DOColor(startColor, tweenTime / 3);
+            });
+        }
+    }
     public void GetFatOrSlim(float value, bool isMultiplier)
     {
+        ColorChange(value);
+
         if ((bodyParts[0].transform.localScale.x + value) + value * 0.001f <= minSize)
         {
             if (isNearToDead)
@@ -175,6 +205,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
+                    ColorChange(value);
                     torso.transform.DOScaleY(minSizeTorso, tweenTime);
                     upBody.transform.DOMoveY(0.56f, tweenTime);
                     return true;
@@ -183,6 +214,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                ColorChange(value);
                 float firstScale = torso.transform.localScale.y;
                 float dif = torso.transform.localScale.y * value - firstScale;
                 torso.transform.DOScaleY(torso.transform.localScale.y * value, tweenTime);
@@ -199,20 +231,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                print(value);
+                ColorChange(value);
                 torso.transform.DOScaleY(torso.transform.localScale.y + value, tweenTime);
                 upBody.transform.DOMoveY(upBody.transform.position.y + ((value * 2) * transform.localScale.y), tweenTime);
                 return true;
             }
         }
-    }
-    public void StabilUpbody(float value)
-    {
-        //float factor = torso.transform.localScale.x / (torso.transform.localScale.x - value);
-        //upBody.transform.DOScale(upBody.transform.localScale + new Vector3((1 - factor) * (1 / torso.transform.localScale.x), 0, (1 - factor) * (1 / torso.transform.localScale.x)), tweenTime);
-        float factor = torso.transform.localScale.x / (torso.transform.localScale.x + value);
-        print("factor " + factor);
-        upBody.transform.DOScale(new Vector3((upBody.transform.localScale.x * factor), upBody.transform.localScale.y, (upBody.transform.localScale.z * factor)), tweenTime);
     }
 
     public void Hit(Transform hitPoint)
@@ -257,7 +281,6 @@ public class PlayerController : MonoBehaviour
     {
         if (onGround)
         {
-            UpbodyStart();
             anim.SetBool("Jump", true);
             transform.forward = Vector3.forward;
             _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
@@ -267,6 +290,7 @@ public class PlayerController : MonoBehaviour
 
     public void FinalJump(float jumpForce)
     {
+        upBody.GetComponent<Animator>().enabled = false;
         upBody.transform.parent = transform;
         StartCoroutine(UpbodyFollow_Coroutine());
         Time.timeScale = 0.5f;
@@ -290,7 +314,6 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(FinalUICameraLook());
 
         });
-        //_rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
         onGround = false;
 
     }
@@ -347,16 +370,14 @@ public class PlayerController : MonoBehaviour
                 anim.SetBool("Jump", false);
                 StartMovement();
                 onGround = true;
-                UpbodyEnd();
             }
         }
         else if (collision.gameObject.CompareTag("FinalGround"))
         {
+            upBody.GetComponent<Animator>().enabled = true;
             isCameFinalGround = true;
             tweenTime = 0.08f;
             collision.gameObject.tag = "Untagged";
-            UpbodyEnd();
-            UpbodyStart();
             upBody.transform.localPosition = new Vector3(upBody.transform.localPosition.x, upBody.transform.localPosition.y, 0);
             upBody.gameObject.GetComponent<Animator>().SetBool("Run", true);
             anim.SetBool("Run", true);
@@ -374,7 +395,7 @@ public class PlayerController : MonoBehaviour
                 diamondScore++;
                 scoreText.text = diamondScore.ToString();
                 diamond.Hit();
-                //diamond toplama sesi 
+                SoundManager.instance.PlayDiamondSound();
             }
 
         }
@@ -385,16 +406,12 @@ public class PlayerController : MonoBehaviour
             other.gameObject.tag = "Untagged";
             Camera.main.GetComponent<CameraMovement>().FinalMovement();
         }
-    }
-
-    public void UpbodyStart()
-    {
-        upBody.transform.parent = torso.transform;
-    }
-    public void UpbodyEnd()
-    {
-        upBody.transform.parent = transform;
-        upBody.transform.position = new Vector3(transform.position.x, upBody.transform.position.y, transform.position.z);
+        else if (other.gameObject.CompareTag("Finish"))
+        {
+            _rigidbody.isKinematic = true;
+            GameManager.Instance.LevelFail();
+            gameObject.SetActive(false);
+        }
     }
 
 }

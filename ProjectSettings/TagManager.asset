@@ -10,6 +10,7 @@ TagManager:
   - FinalGround
   - Boss
   - BossHead
+  - Wall
   layers:
   - Default
   - TransparentFX

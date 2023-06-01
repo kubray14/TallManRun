@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
 
 public class Door : MonoBehaviour
 {
+    [SerializeField] private GameObject brother;
     private ParticleSystem _particleSystem;
     [SerializeField] private float value;
     [SerializeField] private bool isHeight;
@@ -20,7 +22,7 @@ public class Door : MonoBehaviour
         {
             if (isMultiplier)
             {
-                text.text = (value).ToString();
+                text.text = (-value).ToString();
             }
             else
             {
@@ -46,6 +48,7 @@ public class Door : MonoBehaviour
         {
             if (!isDone)
             {
+                SoundManager.instance.PlayDoorSound();
                 if (isHeight)
                 {
                     playerController.GetTallOrShort(value, isMultiplier);
@@ -57,6 +60,12 @@ public class Door : MonoBehaviour
                     _particleSystem.Play();
                 }
                 isDone = true;
+
+                if (brother != null)
+                {
+                    brother.transform.DOMoveY(-1.25f, 0.5f).OnComplete(() => gameObject.SetActive(false));
+                }
+                transform.DOMoveY(-1.25f, 0.5f).OnComplete(() => gameObject.SetActive(false));
             }
 
         }

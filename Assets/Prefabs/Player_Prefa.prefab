@@ -918,6 +918,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf6e25a361abe04eb30dfff35632630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myMaterial: {fileID: 2100000, guid: 57c42d2f795fcfd47830fbd976ff739d, type: 2}
+  startColor: {r: 1, g: 0.72156864, b: 0, a: 1}
+  blueColor: {r: 0, g: 0.47505808, b: 1, a: 0}
+  redColor: {r: 0.6698113, g: 0.13271919, b: 0, a: 0}
   headPrefab: {fileID: 7530873777079218779}
   upbodyPivot: {fileID: 336093433}
   tweenTime: 0.5
@@ -948,6 +952,7 @@ MonoBehaviour:
   head: {fileID: 8146382987303089361}
   bodyPiecePrefab: {fileID: 1761313402824754326, guid: 212bcedf0248ba64d8a0cfd69bd1190e, type: 3}
   finalUI: {fileID: 7397428985332662810}
+  scoreText: {fileID: 0}
 --- !u!95 &8146382987300687943
 Animator:
   serializedVersion: 5

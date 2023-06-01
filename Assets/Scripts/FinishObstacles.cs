@@ -18,12 +18,12 @@ public class FinishObstacles : MonoBehaviour
             float randNum = Random.value < 0.5f ? 1 : -1;
             rb.AddForce(new Vector3(randNum * 2, 2, 2) * 1.5f, ForceMode.Impulse);
             rb.useGravity = true;
-            float value = -0.015f;
-            player.GetFatOrSlim(value, false);
-            player.StabilUpbody(value);
+            float value = -0.1f;
+            player.GetTallOrShort(value, false);
             cards.changeColor();
             gameObject.GetComponent<MeshCollider>().enabled = false;
             enabled = false;
+            Destroy(gameObject, 2f);
         }
     }
 }
