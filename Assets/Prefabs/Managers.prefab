@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diamondClip: {fileID: 8300000, guid: 242d30fa810850a49918c00adfa0f901, type: 3}
   doorClip: {fileID: 8300000, guid: ed279adc211820a4980ff81e533efa3f, type: 3}
+  obstacleClip: {fileID: 8300000, guid: 93c492fa5a2d5b34e9ea2bf23b4037d6, type: 3}
 --- !u!82 &277476376
 AudioSource:
   m_ObjectHideFlags: 0

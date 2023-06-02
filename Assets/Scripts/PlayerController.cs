@@ -15,10 +15,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform upbodyPivot;
     #region Movement
     [SerializeField] private float tweenTime = 1f;
-    [SerializeField] private float forwardSpeed = 1f;
-    [SerializeField] private float rotateSensitivity = 15f;
-    [SerializeField] private float bound = 1f;
-    [SerializeField] private float rotateBound = 0.5f;
+    [SerializeField] private float forwardSpeed = 2f;
+    [SerializeField] private float rotateSensitivity = 75f;
+    [SerializeField] private float bound = 0.9f;
+    [SerializeField] private float rotateBound = 60;
     [SerializeField] float rotateValue = 0;
     [SerializeField] float temp = 0;
     [SerializeField] private bool onGround;
@@ -295,7 +295,7 @@ public class PlayerController : MonoBehaviour
         upBody.transform.parent = transform;
         StartCoroutine(UpbodyFollow_Coroutine());
         Time.timeScale = 0.5f;
-        DOTween.To(() => 1, x => Time.timeScale = x, 0.05f, 1f);
+        DOTween.To(() => 1, x => Time.timeScale = x, 0.1f, 1f);
         upBody.GetComponent<Animator>().enabled = false;
         anim.SetBool("Kick", true);
         anim.SetBool("Run", false);

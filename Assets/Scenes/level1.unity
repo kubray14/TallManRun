@@ -4860,7 +4860,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -11033,10 +11033,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 277476375, guid: a961bbbc58db6254fb144d3381c06909, type: 3}
-      propertyPath: obstacleClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 93c492fa5a2d5b34e9ea2bf23b4037d6, type: 3}
     - target: {fileID: 4905621971227117324, guid: a961bbbc58db6254fb144d3381c06909, type: 3}
       propertyPath: m_Name
       value: Managers
@@ -11727,6 +11723,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3376701553468294697, guid: 3648ca81b4e7b184889f77f20054022e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec6a564930e52fc49ab9c586e3b0c397, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3648ca81b4e7b184889f77f20054022e, type: 3}
 --- !u!4 &6830945431706431989
