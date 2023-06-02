@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotateValue = 0;
     [SerializeField] float temp = 0;
     [SerializeField] private bool onGround;
-    private Touch theTouch;
+    private Vector3 touchStartPos;
+    private Vector3 touchEndPos;
     public bool canMove = false;
     #endregion
     #region 
@@ -73,32 +74,35 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        if (Input.touchCount > 0)
+        if (Input.GetMouseButtonDown(0))
         {
-            theTouch = Input.GetTouch(0);
-            if (theTouch.phase == TouchPhase.Stationary || theTouch.phase == TouchPhase.Moved)
-            {
-                anim.SetBool("Walk", true);
-                float coefficient = (theTouch.deltaPosition.x / Screen.width);
-
-                rotateValue = coefficient * rotateSensitivity;
-                if (temp + rotateValue >= -rotateBound && temp + rotateValue <= rotateBound)
-                {
-                    temp += rotateValue;
-                    transform.eulerAngles += new Vector3(0, rotateValue, 0);
-                }
-
-                if ((transform.position + transform.forward * forwardSpeed * Time.deltaTime).x < bound)
-                {
-                    if ((transform.position + transform.forward * forwardSpeed * Time.deltaTime).x > -bound)
-                    {
-                        transform.position += transform.forward * forwardSpeed * Time.deltaTime;
-                    }
-                }
-                CalcStable(coefficient);
-            }
+            touchStartPos = Input.mousePosition;
         }
-        else
+        if (Input.GetMouseButton(0))
+        {
+            touchEndPos = Input.mousePosition;
+            anim.SetBool("Walk", true);
+            float coefficient = touchEndPos.x - touchStartPos.x;
+            coefficient = Mathf.Clamp(coefficient, -1, 1);
+            touchStartPos = Input.mousePosition;
+
+            rotateValue = coefficient * rotateSensitivity;
+            if (temp + rotateValue >= -rotateBound && temp + rotateValue <= rotateBound)
+            {
+                temp += rotateValue;
+                transform.eulerAngles += new Vector3(0, rotateValue, 0);
+            }
+
+            if ((transform.position + transform.forward * forwardSpeed * Time.deltaTime).x < bound)
+            {
+                if ((transform.position + transform.forward * forwardSpeed * Time.deltaTime).x > -bound)
+                {
+                    transform.position += transform.forward * forwardSpeed * Time.deltaTime;
+                }
+            }
+            CalcStable(coefficient);
+        }
+        if (Input.GetMouseButtonUp(0))
         {
             anim.SetBool("Walk", false);
         }
