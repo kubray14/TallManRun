@@ -80,8 +80,8 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-            touchEndPos = Input.mousePosition;
             anim.SetBool("Walk", true);
+            touchEndPos = Input.mousePosition;
             float coefficient = touchEndPos.x - touchStartPos.x;
             coefficient = Mathf.Clamp(coefficient, -1, 1);
             touchStartPos = Input.mousePosition;
@@ -92,6 +92,11 @@ public class PlayerController : MonoBehaviour
                 temp += rotateValue;
                 transform.eulerAngles += new Vector3(0, rotateValue, 0);
             }
+            //if (transform.eulerAngles.y + rotateValue >= -rotateBound && transform.eulerAngles.y + rotateValue <= rotateBound)
+            //{
+            //    temp += rotateValue;
+            //    transform.eulerAngles += new Vector3(0, rotateValue, 0);
+            //}
 
             if ((transform.position + transform.forward * forwardSpeed * Time.deltaTime).x < bound)
             {
@@ -268,7 +273,6 @@ public class PlayerController : MonoBehaviour
         headRb.AddForce(new Vector3(0, 0, 3), ForceMode.Impulse);
         headPrefab.transform.parent = null;
         canMove = false;
-        print("Game Over");
         DOTween.KillAll();
         _rigidbody.isKinematic = true;
         if (isCameFinalGround)
@@ -287,6 +291,7 @@ public class PlayerController : MonoBehaviour
         if (onGround)
         {
             anim.SetBool("Jump", true);
+            temp = 0;
             transform.forward = Vector3.forward;
             _rigidbody.AddForce((Vector3.forward + Vector3.up * 1.5f) * jumpForce, ForceMode.Impulse);
             onGround = false;
